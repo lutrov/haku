@@ -12,4 +12,5 @@ This project is licensed under the [GNU GPL](http://www.gnu.org/licenses/old-lic
 
 ## Documentation
 
-None at this time.
+Style the search results page & form using `.haku-search-results {}`, `.haku-search-results .entry-excerpt {}`, `.haku-search-results .entry-excerpt a {}`, and `.haku-search-form {}` CSS declarations in your site theme,
+
