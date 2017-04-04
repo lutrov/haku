@@ -37,14 +37,14 @@ function haku_search_query() {
 //
 // Search form with custom parameters.
 //
-function haku_search_form($caption = 'Search') {
+function haku_search_form($caption = null) {
 	static $form = null;
 	if (strlen($form) == 0) {
 		$slug = apply_filters('haku_results_page_slug_filter', HAKU_RESULTS_PAGE_SLUG);
 		if ($page = get_page_by_path($slug)) {
 			$action = get_permalink($page->ID);
 			if (substr(trim($action, '/'), 0 - strlen($slug)) == $slug) {
-				$form = sprintf('<form method="post" action="%s" class="search-form haku-search-form" role="search"><input type="search" name="q" placeholder="%s" value="%s"><input type="submit" value="%s"></form>', $action, esc_attr__('Haku for&hellip;'), haku_search_query(), esc_attr__($caption));
+				$form = sprintf('<form method="post" action="%s" class="search-form haku-search-form" role="search"><input type="search" name="q" placeholder="%s" value="%s"><input type="submit" value="%s"></form>', $action, esc_attr__('Haku for&hellip;'), haku_search_query(), esc_attr__(strlen($caption) > 0 ? $caption : __('Search')));
 			}
 		}
 	}
@@ -107,7 +107,7 @@ die($query);
 		}
 	}
 	if (apply_filters('haku_show_search_form_on_results_page_filter', HAKU_SHOW_SEARCH_FORM_ON_RESULTS_PAGE)) {
-		$result = sprintf('%s%s', $result, haku_search_form('Search Again'));
+		$result = sprintf('%s%s', $result, haku_search_form(__('Search Again')));
 	}
 	return $result;
 }
