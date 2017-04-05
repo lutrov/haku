@@ -48,12 +48,6 @@ This plugin provides an API to customise the default constant values. See this e
 	// ---- Change the Haku plugin SERP show meta date value to false.
 	add_filter('haku_serp_show_meta_date_filter', '__return_false');
 
-	// ---- Change the Haku plugin show form on SERP value to false.
-	add_filter('haku_serp_show_form', 'custom_haku_serp_show_form');
-	function custom_haku_serp_show_form_filter($value) {
-		return false;
-	}
-
 	// ---- Change the Haku plugin custom post types to include in the search.
 	add_filter('haku_post_types_filter', 'custom_haku_post_types_filter');
 	function custom_haku_post_types_filter($types) {
@@ -91,8 +85,6 @@ Or if you're using a custom site plugin (you should be), do it via the `plugins_
 		add_filter('haku_serp_show_meta_author_filter', '__return_false');
 		// Change the Haku plugin SERP show meta date value to false.
 		add_filter('haku_serp_show_meta_date_filter', '__return_false');
-		// Change the Haku plugin show form on SERP value to false.
-		add_filter('haku_serp_show_form', '__return_false');
 		// Change the Haku plugin custom post types to include in the search.
 		add_filter('haku_post_types_filter', 'custom_haku_post_types_filter');
 		function custom_haku_post_types_filter($types) {
