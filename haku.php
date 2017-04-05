@@ -5,7 +5,7 @@ Plugin Name: Haku
 Description: Improves the default Wordpress search by treating the search string as a phrase, not as individual words. It takes relevancy into account, which means it places more importance on post types that contain the phrase in the title, which contain the phrase multiple times, and the relative position of the phrase. Why this plugin name? Haku means "search" in Finnish.
 Author: Ivan Lutrov
 Author URI: http://lutrov.com/
-Version: 3.1
+Version: 3.0
 Notes: This plugin provides an API to customise the default constant values. See the "readme.md" file for more.
 */
 
@@ -16,7 +16,7 @@ defined('ABSPATH') || die('Ahem.');
 //
 define('HAKU_SERP_DATE_FORMAT', get_option('date_format'));
 define('HAKU_SERP_EXCERPT_WORD_COUNT', 20);
-define('HAKU_SERP_SHOW_FORM', true);
+define('HAKU_SERP_SHOW_FEATURED_IMAGE', true);
 define('HAKU_SERP_SHOW_META', true);
 define('HAKU_SERP_SHOW_META_AUTHOR', true);
 define('HAKU_SERP_SHOW_META_DATE', true);
@@ -31,7 +31,11 @@ define('HAKU_BASE_PLUGIN_PATH', dirname(__FILE__));
 // Get the entered search query.
 //
 function haku_search_query() {
-	return isset($_POST['q']) ? trim(preg_replace('#[\s]+#', ' ', str_replace('"', null, $_POST['q']))) : null;
+	$result = null;
+	if (isset($_POST['q'])) {
+		$result = trim(preg_replace('#[\s]+#', ' ', str_replace('"', null, $_POST['q'])));
+	}
+	return $result;
 }
 
 //
@@ -46,7 +50,7 @@ function haku_search_form($form) {
 				array(
 					sprintf('method="get"'),
 					sprintf('class="search-form"'),
-					sprintf('action="%s/"', site_url()),
+					sprintf('action="%s"', home_url('/')),
 					sprintf('value=""'),
 					sprintf('name="s"')
 				),
@@ -106,7 +110,14 @@ function haku_search_results() {
 						break;
 				}
 				$permalink = get_permalink($post->ID);
-				$result = sprintf('%s<h2 class="entry-title"><a href="%s" rel="bookmark" >%s</a></h2><div class="entry-permalink">%s</div>', $result, $permalink, $post->post_title, $permalink);
+				$image = null;
+				if (apply_filters('haku_serp_show_featured_image_filter', HAKU_SERP_SHOW_FEATURED_IMAGE)) {
+					$image = get_the_post_thumbnail_url($post->ID);
+					if (strlen($image) > 0) {
+						$image = sprintf('<div class="entry-image"><img src="%s"></div>', $image);
+					}
+				}
+				$result = sprintf('%s<h2 class="entry-title"><a href="%s" rel="bookmark">%s</a></h2><div class="entry-permalink"><a href="%s">%s</a></div>%s', $result, $permalink, $post->post_title, $permalink, $permalink, $image);
 				if (apply_filters('haku_serp_show_meta_filter', HAKU_SERP_SHOW_META)) {
 					$result = sprintf('%s<div class="entry-meta">', $result);
 					if (apply_filters('haku_serp_show_meta_date_filter', HAKU_SERP_SHOW_META_DATE)) {
@@ -122,9 +133,6 @@ function haku_search_results() {
 		} else {
 			$result = sprintf('%s<p class="message message-no-results">Your search for "%s" produced no results.</p>', $result, $q);
 		}
-		if (apply_filters('haku_serp_show_form_filter', HAKU_SERP_SHOW_FORM)) {
-			$result = sprintf('%s%s', $result, haku_search_form());
-		}
 	}
 	return $result;
 }
@@ -133,30 +141,8 @@ function haku_search_results() {
 // Get post types to include.
 //
 function haku_post_types() {
-	$types = apply_filters('haku_post_types_filter', array('page', 'post'));
-	return sprintf("'%s'", implode("', '", $types));
-}
-
-//
-// Add shortcode to use in results page.
-//
-if (strlen(get_option('permalink_structure')) > 0) {
-	add_shortcode('haku', 'haku_search_results');
-}
-
-//
-// Remove search page title.
-//
-add_action('template_redirect', 'haku_remove_post_title');
-function haku_remove_post_title() {
-	$slug = apply_filters('haku_serp_slug_filter', HAKU_SERP_SLUG);
-	if (is_page($slug)) {
-		if (function_exists('genesis')) {
-			remove_action('genesis_entry_header', 'genesis_do_post_title');
-		} else {
-			add_filter('the_title', '__return_false');
-		}
-	}
+	$result = sprintf("'%s'", implode("', '", apply_filters('haku_post_types_filter', array('page', 'post'))));
+	return $result;
 }
 
 //
@@ -178,6 +164,13 @@ function haku_body_class($classes) {
 add_action('plugins_loaded', 'haku_add_filter');
 function haku_add_filter() {
 	add_filter('get_search_form', 'haku_search_form', 11);
+}
+
+//
+// Add shortcode to use in results page.
+//
+if (strlen(get_option('permalink_structure')) > 0) {
+	add_shortcode('haku', 'haku_search_results');
 }
 
 ?>
