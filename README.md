@@ -12,6 +12,8 @@ This project is licensed under the [GNU GPL](http://www.gnu.org/licenses/old-lic
 
 ## Documentation
 
+Haku will only work if your theme uses the standard Wordpress `get_search_form` hook. If your theme has a hardcoded search form, you will need to modify it so it uses the `get_search_form` hook instead.
+
 __Your search results page needs to have the `[haku]` shortcode for the results to show.__
 
 This plugin provides an API to customise the default constant values. See this example:
