@@ -89,11 +89,15 @@ function haku_search_results() {
 			}
 			$mask = apply_filters('haku_serp_date_format_filter', HAKU_SERP_DATE_FORMAT);
 			foreach ($posts as $post) {
-				$content = $post->post_content;
-				if (function_exists('markdown')) {
-					$content = markdown($content);
+				if (strlen($post->post_excerpt) > 0) {
+					$content = $post->post_excerpt;
+				} else {
+					$content = $post->post_content;
+					if (function_exists('markdown')) {
+						$content = markdown($content);
+					}
+					$content = wp_trim_words(strip_shortcodes($content), apply_filters('haku_serp_excerpt_word_count_filter', HAKU_SERP_EXCERPT_WORD_COUNT));
 				}
-				$content = wp_trim_words(strip_shortcodes($content), apply_filters('haku_serp_excerpt_word_count_filter', HAKU_SERP_EXCERPT_WORD_COUNT));
 				switch (true) {
 					case ($x = strrpos($content, '.')):
 					case ($x = strrpos($content, ':')):
