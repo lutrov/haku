@@ -16,7 +16,7 @@ defined('ABSPATH') || die('Ahem.');
 //
 define('HAKU_SERP_DATE_FORMAT', get_option('date_format'));
 define('HAKU_SERP_EXCERPT_WORD_COUNT', 20);
-define('HAKU_SERP_SHOW_FEATURED_IMAGE', true);
+define('HAKU_SERP_SHOW_FEATURED_IMAGE', false);
 define('HAKU_SERP_SHOW_META', true);
 define('HAKU_SERP_SHOW_META_AUTHOR', true);
 define('HAKU_SERP_SHOW_META_DATE', true);
@@ -110,14 +110,13 @@ function haku_search_results() {
 						break;
 				}
 				$permalink = get_permalink($post->ID);
-				$image = null;
+				$result = sprintf('%s<h2 class="entry-title"><a href="%s" rel="bookmark">%s</a></h2><div class="entry-permalink"><a href="%s">%s</a></div>', $result, $permalink, $post->post_title, $permalink, $permalink);
 				if (apply_filters('haku_serp_show_featured_image_filter', HAKU_SERP_SHOW_FEATURED_IMAGE)) {
 					$image = get_the_post_thumbnail_url($post->ID);
 					if (strlen($image) > 0) {
-						$image = sprintf('<div class="entry-image"><img src="%s"></div>', $image);
+						$result = sprintf('%s<div class="entry-image"><img src="%s"></div>', $result, $image);
 					}
 				}
-				$result = sprintf('%s<h2 class="entry-title"><a href="%s" rel="bookmark">%s</a></h2><div class="entry-permalink"><a href="%s">%s</a></div>%s', $result, $permalink, $post->post_title, $permalink, $permalink, $image);
 				if (apply_filters('haku_serp_show_meta_filter', HAKU_SERP_SHOW_META)) {
 					$result = sprintf('%s<div class="entry-meta">', $result);
 					if (apply_filters('haku_serp_show_meta_date_filter', HAKU_SERP_SHOW_META_DATE)) {
@@ -128,7 +127,7 @@ function haku_search_results() {
 					}
 					$result = sprintf('%s</div>', $result);
 				}
-				$result = sprintf('%s<p class="entry-excerpt">%s</p>', $result, $content);
+				$result = sprintf('%s<div class="entry-excerpt">%s</div>', $result, $content);
 			}
 		} else {
 			$result = sprintf('%s<p class="message message-no-results">Your search for "%s" produced no results.</p>', $result, $q);
