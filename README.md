@@ -36,6 +36,9 @@ This plugin provides an API to customise the default constant values. See this e
 		return 'search-results';
 	}
 
+	// Change the Haku plugin SERP show featured image to false.
+	add_filter('haku_serp_show_featured_image_filter', '__return_false');
+
 	// ---- Change the Haku plugin SERP show meta value to false.
 	add_filter('haku_serp_show_meta_filter', '__return_false');
 
@@ -80,6 +83,8 @@ Or if you're using a custom site plugin (you should be), do it via the `plugins_
 		function custom_haku_serp_slug_filter($value) {
 			return 'search-results';
 		}
+		// Change the Haku plugin SERP show featured image to false.
+		add_filter('haku_serp_show_featured_image_filter', '__return_false');
 		// Change the Haku plugin SERP show meta value to false.
 		add_filter('haku_serp_show_meta_filter', '__return_false');
 		// Change the Haku plugin SERP show meta author value to false.
@@ -111,6 +116,7 @@ Style the search results page & form using the following CSS declarations in you
 	.haku-serp .entry-meta .message-no-results {}
 	.haku-serp .entry-title {}
 	.haku-serp .entry-permalink {}
+	.haku-serp .entry-image {}
 	.haku-serp .entry-meta {}
 	.haku-serp .entry-meta .entry-time {}
 	.haku-serp .entry-meta .entry-author {}
