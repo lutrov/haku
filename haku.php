@@ -5,7 +5,7 @@ Plugin Name: Haku
 Description: Improves the default Wordpress search by treating the search string as a phrase, not as individual words. It takes relevancy into account, which means it places more importance on post types that contain the phrase in the title, which contain the phrase multiple times, and the relative position of the phrase. Why this plugin name? Haku means "search" in Finnish.
 Author: Ivan Lutrov
 Author URI: http://lutrov.com/
-Version: 3.0
+Version: 3.1
 Notes: This plugin provides an API to customise the default constant values. See the "readme.md" file for more.
 */
 
@@ -38,15 +38,29 @@ function haku_search_query() {
 //
 // Search form with custom parameters.
 //
-function haku_search_form($caption = null) {
-	static $form = null;
-	if (strlen($form) == 0) {
-		$slug = apply_filters('haku_serp_slug_filter', HAKU_SERP_SLUG);
-		if ($page = get_page_by_path($slug)) {
-			$action = get_permalink($page->ID);
-			if (substr(trim($action, '/'), 0 - strlen($slug)) == $slug) {
-				$form = sprintf('<form method="post" action="%s" class="haku-form search-form" role="search"><input type="search" name="q" placeholder="%s" value="%s"><input type="submit" value="%s"></form>', $action, esc_attr__(apply_filters('haku_form_placeholder_text_filter', HAKU_FORM_PLACEHOLDER_TEXT)), haku_search_query(), esc_attr__(strlen($caption) > 0 ? $caption : __('Search')));
-			}
+function haku_search_form($form) {
+	$slug = apply_filters('haku_serp_slug_filter', HAKU_SERP_SLUG);
+	$home = site_url();
+	if ($page = get_page_by_path($slug)) {
+		$action = get_permalink($page->ID);
+		if (substr(trim($action, '/'), 0 - strlen($slug)) == $slug) {
+			$form = str_replace(
+				array(
+					sprintf('method="get"'),
+					sprintf('class="search-form"'),
+					sprintf('action="%s/"', $home),
+					sprintf('value=""'),
+					sprintf('name="s"')
+				),
+				array(
+					sprintf('method="post"'),
+					sprintf('class="haku-form search-form"'),
+					sprintf('action="%s"', $action),
+					sprintf('value="%s"', haku_search_query()),
+					sprintf('name="q"')
+				),
+				$form
+			);
 		}
 	}
 	return $form;
@@ -101,7 +115,7 @@ function haku_search_results() {
 					}
 					$result = sprintf('%s</div>', $result);
 				}
-				$result = sprintf('%s<div class="entry-excerpt">%s</div>', $result, $content);
+				$result = sprintf('%s<p class="entry-excerpt">%s</p>', $result, $content);
 			}
 		} else {
 			$result = sprintf('%s<p class="message message-no-results">Your search for "%s" produced no results.</p>', $result, $q);
