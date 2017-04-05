@@ -40,7 +40,6 @@ function haku_search_query() {
 //
 function haku_search_form($form) {
 	$slug = apply_filters('haku_serp_slug_filter', HAKU_SERP_SLUG);
-	$home = site_url();
 	if ($page = get_page_by_path($slug)) {
 		$action = get_permalink($page->ID);
 		if (substr(trim($action, '/'), 0 - strlen($slug)) == $slug) {
@@ -48,7 +47,7 @@ function haku_search_form($form) {
 				array(
 					sprintf('method="get"'),
 					sprintf('class="search-form"'),
-					sprintf('action="%s/"', $home),
+					sprintf('action="%s/"', site_url()),
 					sprintf('value=""'),
 					sprintf('name="s"')
 				),
