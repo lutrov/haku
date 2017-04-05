@@ -18,13 +18,6 @@ Haku will only work if your theme uses the standard Wordpress `get_search_form` 
 
 This plugin provides an API to customise the default constant values. See this example:
 
-
-	// ---- Change the Haku plugin form placeholder text.
-	add_filter('haku_form_placeholder_text_filter', 'custom_haku_form_placeholder_text_filter');
-	function custom_haku_form_placeholder_text_filter($value) {
-		return 'Search this site&hellip;';
-	}
-
 	// ---- Change the Haku plugin SERP date format.
 	add_filter('haku_serp_date_format_filter', 'custom_haku_serp_date_format_filter');
 	function custom_haku_serp_date_format_filter($value) {
@@ -72,11 +65,6 @@ Or if you're using a custom site plugin (you should be), do it via the `plugins_
 	// ---- Change the Haku plugin constant values.
 	add_action('plugins_loaded', 'custom_haku_filters');
 	function custom_haku_filters() {
-		// Change the Haku plugin form placeholder text.
-		add_filter('haku_form_placeholder_text_filter', 'custom_haku_form_placeholder_text_filter');
-		function custom_haku_form_placeholder_text_filter($value) {
-			return 'Search this site&hellip;';
-		}
 		// Change the Haku plugin SERP date format.
 		add_filter('haku_serp_date_format_filter', 'custom_haku_serp_date_format_filter');
 		function custom_haku_serp_date_format_filter($value) {
