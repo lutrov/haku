@@ -18,12 +18,6 @@ Haku will only work if your theme uses the standard Wordpress `get_search_form` 
 
 This plugin provides an API to customise the default constant values. See this example:
 
-	// ---- Change the Haku plugin SERP date format.
-	add_filter('haku_serp_date_format_filter', 'custom_haku_serp_date_format_filter');
-	function custom_haku_serp_date_format_filter($value) {
-		return 'Y-m-d';
-	}
-
 	// ---- Change the Haku plugin SERP excerpt word count.
 	add_filter('haku_serp_excerpt_word_count_filter', 'custom_haku_serp_excerpt_word_count_filter');
 	function custom_haku_serp_excerpt_word_count_filter($value) {
@@ -36,17 +30,14 @@ This plugin provides an API to customise the default constant values. See this e
 		return 'search-results';
 	}
 
-	// Change the Haku plugin SERP show featured image to false.
-	add_filter('haku_serp_show_featured_image_filter', '__return_false');
+	// Change the Haku plugin SERP show thumbnail to false.
+	add_filter('haku_serp_show_thumbnail_filter', '__return_false');
 
-	// ---- Change the Haku plugin SERP show meta value to false.
-	add_filter('haku_serp_show_meta_filter', '__return_false');
+	// ---- Change the Haku plugin SERP show author value to false.
+	add_filter('haku_serp_show_author_filter', '__return_false');
 
-	// ---- Change the Haku plugin SERP show meta author value to false.
-	add_filter('haku_serp_show_meta_author_filter', '__return_false');
-
-	// ---- Change the Haku plugin SERP show meta date value to false.
-	add_filter('haku_serp_show_meta_date_filter', '__return_false');
+	// ---- Change the Haku plugin SERP show date value to false.
+	add_filter('haku_serp_show_date_filter', '__return_false');
 
 	// ---- Change the Haku plugin custom post types to include in the search.
 	add_filter('haku_post_types_filter', 'custom_haku_post_types_filter');
@@ -62,29 +53,22 @@ Or if you're using a custom site plugin (you should be), do it via the `plugins_
 	// ---- Change the Haku plugin constant values.
 	add_action('plugins_loaded', 'custom_haku_filters');
 	function custom_haku_filters() {
-		// Change the Haku plugin SERP date format.
-		add_filter('haku_serp_date_format_filter', 'custom_haku_serp_date_format_filter');
-		function custom_haku_serp_date_format_filter($value) {
-			return 'Y-m-d';
-		}
 		// Change the Haku plugin SERP excerpt word count.
 		add_filter('haku_serp_excerpt_word_count_filter', 'custom_haku_serp_excerpt_word_count_filter');
 		function custom_haku_serp_excerpt_word_count_filter($value) {
-			return 40;
+			return 80;
 		}
 		// Change the Haku plugin SERP slug.
 		add_filter('haku_serp_slug_filter', 'custom_haku_serp_slug_filter');
 		function custom_haku_serp_slug_filter($value) {
 			return 'search-results';
 		}
-		// Change the Haku plugin SERP show featured image to false.
-		add_filter('haku_serp_show_featured_image_filter', '__return_false');
-		// Change the Haku plugin SERP show meta value to false.
-		add_filter('haku_serp_show_meta_filter', '__return_false');
-		// Change the Haku plugin SERP show meta author value to false.
-		add_filter('haku_serp_show_meta_author_filter', '__return_false');
-		// Change the Haku plugin SERP show meta date value to false.
-		add_filter('haku_serp_show_meta_date_filter', '__return_false');
+		// Change the Haku plugin SERP show thumbnail to false.
+		add_filter('haku_serp_show_thumbnail_filter', '__return_false');
+		// Change the Haku plugin SERP show author value to false.
+		add_filter('haku_serp_show_author_filter', '__return_false');
+		// Change the Haku plugin SERP show date value to false.
+		add_filter('haku_serp_show_date_filter', '__return_false');
 		// Change the Haku plugin custom post types to include in the search.
 		add_filter('haku_post_types_filter', 'custom_haku_post_types_filter');
 		function custom_haku_post_types_filter($types) {
@@ -111,6 +95,6 @@ Style the search results page & form using the following CSS declarations in you
 	.haku-serp .entry .entry-permalink {}
 	.haku-serp .entry .entry-image {}
 	.haku-serp .entry .entry-meta {}
-	.haku-serp .entry .entry-meta .entry-time {}
 	.haku-serp .entry .entry-meta .entry-author {}
+	.haku-serp .entry .entry-meta .entry-date {}
 	.haku-serp .entry .entry-excerpt {}
