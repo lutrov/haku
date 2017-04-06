@@ -5,7 +5,7 @@ Plugin Name: Haku
 Description: Improves the default Wordpress search by treating the search string as a phrase, not as individual words. It takes relevancy into account, which means it places more importance on post types that contain the phrase in the title, which contain the phrase multiple times, and the relative position of the phrase. Why this plugin name? Haku means "search" in Finnish.
 Author: Ivan Lutrov
 Author URI: http://lutrov.com/
-Version: 3.0
+Version: 3.1
 Notes: This plugin provides an API to customise the default constant values. See the "readme.md" file for more.
 */
 
@@ -39,7 +39,7 @@ function haku_search_query() {
 }
 
 //
-// Search form with custom parameters.
+// Customise search form to match the rest of our logic.
 //
 function haku_search_form($form) {
 	$slug = apply_filters('haku_serp_slug_filter', HAKU_SERP_SLUG);
@@ -50,13 +50,21 @@ function haku_search_form($form) {
 				array(
 					sprintf('method="get"'),
 					sprintf('class="search-form"'),
+					sprintf('class="searchform"'),
+					sprintf('class="searchform search-form"'),
+					sprintf('class="et_pb_searchform"'),
+					sprintf('class="et-search-form"'),
 					sprintf('action="%s"', home_url('/')),
 					sprintf('value=""'),
 					sprintf('name="s"')
 				),
 				array(
 					sprintf('method="post"'),
-					sprintf('class="haku-form search-form"'),
+					sprintf('class="search-form haku-form"'),
+					sprintf('class="searchform haku-form"'),
+					sprintf('class="search-form searchform haku-form"'),
+					sprintf('class="et_pb_searchform haku-form"'),
+					sprintf('class="et-search-form haku-form"'),
 					sprintf('action="%s"', $action),
 					sprintf('value="%s"', haku_search_query()),
 					sprintf('name="q"')
