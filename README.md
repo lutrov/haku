@@ -27,7 +27,7 @@ This plugin provides an API to customise the default constant values. See this e
 	// ---- Change the Haku plugin SERP excerpt word count.
 	add_filter('haku_serp_excerpt_word_count_filter', 'custom_haku_serp_excerpt_word_count_filter');
 	function custom_haku_serp_excerpt_word_count_filter($value) {
-		return 40;
+		return 80;
 	}
 
 	// ---- Change the Haku plugin SERP slug.
