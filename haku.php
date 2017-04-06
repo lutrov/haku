@@ -15,7 +15,7 @@ defined('ABSPATH') || die('Ahem.');
 // Define constants used by this plugin.
 //
 define('HAKU_SERP_DATE_FORMAT', get_option('date_format'));
-define('HAKU_SERP_EXCERPT_WORD_COUNT', 20);
+define('HAKU_SERP_EXCERPT_WORD_COUNT', 40);
 define('HAKU_SERP_SHOW_FEATURED_IMAGE', true);
 define('HAKU_SERP_SHOW_META', true);
 define('HAKU_SERP_SHOW_META_AUTHOR', true);
