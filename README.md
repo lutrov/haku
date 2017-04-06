@@ -104,8 +104,9 @@ Style the search results page & form using the following CSS declarations in you
 	.haku-form input[type=submit] {}
 
 	.haku-serp {}
-	.haku-serp .entry-meta .message {}
-	.haku-serp .entry-meta .message-no-results {}
+	.haku-serp .message {}
+	.haku-serp .message-no-results {}
+	.haku-serp .entry-wrapper {}
 	.haku-serp .entry-title {}
 	.haku-serp .entry-permalink {}
 	.haku-serp .entry-image {}
