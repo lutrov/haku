@@ -18,16 +18,22 @@ Haku will only work if your theme uses the standard Wordpress `get_search_form` 
 
 This plugin provides an API to customise the default constant values. See this example:
 
-	// ---- Change the Haku plugin SERP excerpt word count.
-	add_filter('haku_serp_excerpt_word_count_filter', 'custom_haku_serp_excerpt_word_count_filter');
-	function custom_haku_serp_excerpt_word_count_filter($value) {
-		return 80;
-	}
-
 	// ---- Change the Haku plugin SERP slug.
 	add_filter('haku_serp_slug_filter', 'custom_haku_serp_slug_filter');
 	function custom_haku_serp_slug_filter($value) {
 		return 'search-results';
+	}
+
+	// ---- Change the Haku plugin SERP results limit.
+	add_filter('haku_serp_results_limit_filter', 'custom_haku_serp_results_limit_filter');
+	function haku_serp_results_limit_filter($value) {
+		return 200;
+	}
+
+	// ---- Change the Haku plugin SERP excerpt word count.
+	add_filter('haku_serp_excerpt_word_count_filter', 'custom_haku_serp_excerpt_word_count_filter');
+	function custom_haku_serp_excerpt_word_count_filter($value) {
+		return 80;
 	}
 
 	// Change the Haku plugin SERP show thumbnail to false.
@@ -53,15 +59,20 @@ Or if you're using a custom site plugin (you should be), do it via the `plugins_
 	// ---- Change the Haku plugin constant values.
 	add_action('plugins_loaded', 'custom_haku_filters');
 	function custom_haku_filters() {
-		// Change the Haku plugin SERP excerpt word count.
-		add_filter('haku_serp_excerpt_word_count_filter', 'custom_haku_serp_excerpt_word_count_filter');
-		function custom_haku_serp_excerpt_word_count_filter($value) {
-			return 80;
-		}
 		// Change the Haku plugin SERP slug.
 		add_filter('haku_serp_slug_filter', 'custom_haku_serp_slug_filter');
 		function custom_haku_serp_slug_filter($value) {
 			return 'search-results';
+		}
+		// ---- Change the Haku plugin SERP results limit.
+		add_filter('haku_serp_results_limit_filter', 'custom_haku_serp_results_limit_filter');
+		function haku_serp_results_limit_filter($value) {
+			return 200;
+		}
+		// Change the Haku plugin SERP excerpt word count.
+		add_filter('haku_serp_excerpt_word_count_filter', 'custom_haku_serp_excerpt_word_count_filter');
+		function custom_haku_serp_excerpt_word_count_filter($value) {
+			return 80;
 		}
 		// Change the Haku plugin SERP show thumbnail to false.
 		add_filter('haku_serp_show_thumbnail_filter', '__return_false');
