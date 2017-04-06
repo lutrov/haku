@@ -16,10 +16,9 @@ defined('ABSPATH') || die('Ahem.');
 //
 define('HAKU_SERP_DATE_FORMAT', get_option('date_format'));
 define('HAKU_SERP_EXCERPT_WORD_COUNT', 40);
-define('HAKU_SERP_SHOW_FEATURED_IMAGE', true);
-define('HAKU_SERP_SHOW_META', true);
-define('HAKU_SERP_SHOW_META_AUTHOR', true);
-define('HAKU_SERP_SHOW_META_DATE', true);
+define('HAKU_SERP_SHOW_AUTHOR', true);
+define('HAKU_SERP_SHOW_DATE', true);
+define('HAKU_SERP_SHOW_THUMBNAIL', true);
 define('HAKU_SERP_SLUG', 'search');
 
 //
@@ -91,18 +90,41 @@ function haku_search_results() {
 		}
 		$in = haku_post_types();
 		$query = "SELECT $wpdb->posts.ID, $wpdb->posts.post_name, $wpdb->posts.post_title, $wpdb->posts.post_date, $wpdb->posts.post_author, $wpdb->posts.post_content, IF(LOCATE('$q', $wpdb->posts.post_title), 1, 0) AS IN_TITLE, IF(LOCATE('$q', $wpdb->posts.post_content), 1, 0) AS IN_CONTENT, LOCATE('$q', $wpdb->posts.post_title) AS TITLE_POS, LOCATE('$q', $wpdb->posts.post_content) AS CONTENT_POS, (LENGTH($wpdb->posts.post_title) - LENGTH(REPLACE(UPPER($wpdb->posts.post_title), '$q', ''))) / LENGTH('$q') AS TITLE_CNT, (LENGTH($wpdb->posts.post_content) - LENGTH(REPLACE(UPPER($wpdb->posts.post_content), '$q', ''))) / LENGTH('%q') AS CONTENT_CNT FROM $wpdb->posts WHERE 1=1 AND ((($wpdb->posts.post_title LIKE '%$q%') OR ($wpdb->posts.post_content LIKE '%$q%'))) AND $wpdb->posts.post_type IN ($in) AND ($wpdb->posts.post_status = 'publish' OR $wpdb->posts.post_author = 1 AND $wpdb->posts.post_status = 'private') ORDER BY IN_TITLE DESC, TITLE_CNT DESC, TITLE_POS ASC, IN_CONTENT DESC, CONTENT_CNT DESC, CONTENT_POS ASC, $wpdb->posts.post_date DESC";
-		$posts = $wpdb->get_results($query, OBJECT);
+		$posts = get_transient(sprintf('haku_%s', hash('md5', $query)));
+		if ($posts == false) {
+			$posts = $wpdb->get_results($query, OBJECT);
+			if (count($posts) > 0) {
+				set_transient(sprintf('haku_%s', hash('md5', $query)), $posts, HOUR_IN_SECONDS);
+			}
+		}
 		if (($c = count($posts)) > 0) {
 			if ($c > 1) {
 				$result = sprintf('%s<p class="message">Your search for "%s" produced %s results, sorted by relevance.</p>', $result, $q, $c);
 			} else {
 				$result = sprintf('%s<p class="message">Your search for "%s" produced 1 result.</p>', $result, $q);
 			}
-			$mask = apply_filters('haku_serp_date_format_filter', HAKU_SERP_DATE_FORMAT);
 			foreach ($posts as $post) {
-				if (strlen($post->post_excerpt) > 0) {
-					$content = $post->post_excerpt;
-				} else {
+				$permalink = get_permalink($post->ID);
+				$result = sprintf('%s<div class="entry"><h2 class="entry-title"><a href="%s" rel="bookmark">%s</a></h2><div class="entry-permalink"><a href="%s">%s</a></div>', $result, $permalink, $post->post_title, $permalink, $permalink);
+				$thumbnail = null;
+				if (apply_filters('haku_serp_show_thumbnail_filter', HAKU_SERP_SHOW_THUMBNAIL)) {
+					$thumbnail = get_the_post_thumbnail($post->ID, 'thumbnail');
+				}
+				if (strlen($thumbnail) > 0) {
+					$result = sprintf('%s<div class="entry-image">%s</div>', $result, $thumbnail);
+				}
+				$meta = null;
+				if (apply_filters('haku_serp_show_date_filter', HAKU_SERP_SHOW_DATE)) {
+					$meta = sprintf('%s<span class="entry-date">%s</span>', $meta, date(HAKU_SERP_DATE_FORMAT, strtotime($post->post_date)));
+				}
+				if (apply_filters('haku_serp_show_author_filter', HAKU_SERP_SHOW_AUTHOR)) {
+					$meta = sprintf('%s by <span class="entry-author">%s %s</span>', $meta, get_the_author_meta('first_name', $post->post_author), get_the_author_meta('last_name', $post->post_author));
+				}
+				if (strlen($meta) > 0) {
+					$result = sprintf('%s<div class="entry-meta">%s</div>', $result, $meta);
+				}
+				$content = $post->post_excerpt;
+				if (strlen($content) == 0) {
 					$content = $post->post_content;
 					if (function_exists('markdown')) {
 						$content = markdown($content);
@@ -116,24 +138,6 @@ function haku_search_results() {
 					case ($x = strrpos($content, '!')):
 						$content = substr($content, 0, $x + 1);
 						break;
-				}
-				$permalink = get_permalink($post->ID);
-				$result = sprintf('%s<div class="entry"><h2 class="entry-title"><a href="%s" rel="bookmark">%s</a></h2><div class="entry-permalink"><a href="%s">%s</a></div>', $result, $permalink, $post->post_title, $permalink, $permalink);
-				if (apply_filters('haku_serp_show_featured_image_filter', HAKU_SERP_SHOW_FEATURED_IMAGE)) {
-					$thumbnail = get_the_post_thumbnail($post->ID, 'thumbnail');
-					if (strlen($thumbnail) > 0) {
-						$result = sprintf('%s<div class="entry-image">%s</div>', $result, $thumbnail);
-					}
-				}
-				if (apply_filters('haku_serp_show_meta_filter', HAKU_SERP_SHOW_META)) {
-					$result = sprintf('%s<div class="entry-meta">', $result);
-					if (apply_filters('haku_serp_show_meta_date_filter', HAKU_SERP_SHOW_META_DATE)) {
-						$result = sprintf('%s<span class="entry-time">%s</span>', $result, date($mask, strtotime($post->post_date)));
-					}
-					if (apply_filters('haku_serp_show_meta_author_filter', HAKU_SERP_SHOW_META_AUTHOR)) {
-						$result = sprintf('%s by <span class="entry-author">%s %s</span>', $result, get_the_author_meta('first_name', $post->post_author), get_the_author_meta('last_name', $post->post_author));
-					}
-					$result = sprintf('%s</div>', $result);
 				}
 				$result = sprintf('%s<div class="entry-excerpt">%s</div></div>', $result, $content);
 			}
