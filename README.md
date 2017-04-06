@@ -106,11 +106,11 @@ Style the search results page & form using the following CSS declarations in you
 	.haku-serp {}
 	.haku-serp .message {}
 	.haku-serp .message-no-results {}
-	.haku-serp .entry-wrapper {}
-	.haku-serp .entry-title {}
-	.haku-serp .entry-permalink {}
-	.haku-serp .entry-image {}
-	.haku-serp .entry-meta {}
-	.haku-serp .entry-meta .entry-time {}
-	.haku-serp .entry-meta .entry-author {}
-	.haku-serp .entry-meta .entry-excerpt {}
+	.haku-serp .entry {}
+	.haku-serp .entry .entry-title {}
+	.haku-serp .entry .entry-permalink {}
+	.haku-serp .entry .entry-image {}
+	.haku-serp .entry .entry-meta {}
+	.haku-serp .entry .entry-meta .entry-time {}
+	.haku-serp .entry .entry-meta .entry-author {}
+	.haku-serp .entry .entry-excerpt {}
