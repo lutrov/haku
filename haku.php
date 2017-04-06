@@ -118,11 +118,11 @@ function haku_search_results() {
 						break;
 				}
 				$permalink = get_permalink($post->ID);
-				$result = sprintf('%s<h2 class="entry-title"><a href="%s" rel="bookmark">%s</a></h2><div class="entry-permalink"><a href="%s">%s</a></div>', $result, $permalink, $post->post_title, $permalink, $permalink);
+				$result = sprintf('%s<div class="entry"><h2 class="entry-title"><a href="%s" rel="bookmark">%s</a></h2><div class="entry-permalink"><a href="%s">%s</a></div>', $result, $permalink, $post->post_title, $permalink, $permalink);
 				if (apply_filters('haku_serp_show_featured_image_filter', HAKU_SERP_SHOW_FEATURED_IMAGE)) {
-					$image = get_the_post_thumbnail_url($post->ID);
-					if (strlen($image) > 0) {
-						$result = sprintf('%s<div class="entry-image"><img src="%s"></div>', $result, $image);
+					$thumbnail = get_the_post_thumbnail($post->ID, 'thumbnail');
+					if (strlen($thumbnail) > 0) {
+						$result = sprintf('%s<div class="entry-image">%s</div>', $result, $thumbnail);
 					}
 				}
 				if (apply_filters('haku_serp_show_meta_filter', HAKU_SERP_SHOW_META)) {
@@ -135,7 +135,7 @@ function haku_search_results() {
 					}
 					$result = sprintf('%s</div>', $result);
 				}
-				$result = sprintf('%s<div class="entry-excerpt">%s</div>', $result, $content);
+				$result = sprintf('%s<div class="entry-excerpt">%s</div></div>', $result, $content);
 			}
 		} else {
 			$result = sprintf('%s<p class="message message-no-results">Your search for "%s" produced no results.</p>', $result, $q);
