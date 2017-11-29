@@ -3,9 +3,10 @@
 /*
 Plugin Name: Haku
 Description: Improves the default Wordpress search by treating the search string as a phrase, not as individual words. It takes relevancy into account, which means it places more importance on post types that contain the phrase in the title, which contain the phrase multiple times, and the relative position of the phrase. Why this plugin name? Haku means "search" in Finnish.
+Plugin URI: https://github.com/lutrov/haku
 Author: Ivan Lutrov
 Author URI: http://lutrov.com/
-Version: 3.1
+Version: 3.2
 Notes: This plugin provides an API to customise the default constant values. See the "readme.md" file for more.
 */
 
