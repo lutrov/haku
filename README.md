@@ -48,7 +48,7 @@ This plugin provides an API to customise the default constant values. See this e
 	// ---- Change the Haku plugin custom post types to include in the search.
 	add_filter('haku_post_types_filter', 'custom_haku_post_types_filter');
 	function custom_haku_post_types_filter($types) {
-		foreach (array('movie', 'book', 'product') as $type) {
+		foreach (array('movie', 'book') as $type) {
 			array_push($types, $type);
 		}
 		return $types;
@@ -83,7 +83,7 @@ Or if you're using a custom site plugin (you should be), do it via the `plugins_
 		// Change the Haku plugin custom post types to include in the search.
 		add_filter('haku_post_types_filter', 'custom_haku_post_types_filter');
 		function custom_haku_post_types_filter($types) {
-			foreach (array('movie', 'book', 'product') as $type) {
+			foreach (array('movie', 'book') as $type) {
 				array_push($types, $type);
 			}
 			return $types;
