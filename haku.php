@@ -161,7 +161,7 @@ function haku_search_results() {
 // Get post types to include.
 //
 function haku_post_types() {
-	$result = sprintf("'%s'", implode("', '", apply_filters('haku_post_types_filter', array('page', 'post'))));
+	$result = sprintf("'%s'", implode("', '", apply_filters('haku_post_types_filter', array('page', 'post', 'product'))));
 	return $result;
 }
 
