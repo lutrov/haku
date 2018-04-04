@@ -6,7 +6,7 @@ Description: Improves the default Wordpress search by treating the search string
 Plugin URI: https://github.com/lutrov/haku
 Author: Ivan Lutrov
 Author URI: http://lutrov.com/
-Version: 3.2
+Version: 3.3
 Notes: This plugin provides an API to customise the default constant values. See the "readme.md" file for more.
 */
 
@@ -18,6 +18,7 @@ defined('ABSPATH') || die('Ahem.');
 define('HAKU_SERP_EXCERPT_WORD_COUNT', 40);
 define('HAKU_SERP_SHOW_AUTHOR', true);
 define('HAKU_SERP_SHOW_DATE', true);
+define('HAKU_SERP_CACHE_LIFETIME', 60);
 define('HAKU_SERP_DATE_FORMAT', get_option('date_format'));
 define('HAKU_SERP_SHOW_THUMBNAIL', true);
 define('HAKU_SERP_SLUG', 'search');
@@ -97,7 +98,7 @@ function haku_search_results() {
 		if ($posts == false) {
 			$posts = $wpdb->get_results($query, OBJECT);
 			if (count($posts) > 0) {
-				set_transient(sprintf('haku_%s', hash('md5', $query)), $posts, HOUR_IN_SECONDS);
+				set_transient(sprintf('haku_%s', hash('md5', $query)), $posts, apply_filters('haku_serp_cache_lifetime_filter', HAKU_SERP_CACHE_LIFETIME));
 			}
 		}
 		if (($c = count($posts)) > 0) {
