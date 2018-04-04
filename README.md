@@ -36,6 +36,12 @@ This plugin provides an API to customise the default constant values. See this e
 		return 80;
 	}
 
+	// ---- Change the Haku plugin SERP cache lifetime to 10 minutes.
+	add_filter('haku_serp_cache_lifetime_filter', 'custom_haku_serp_cache_lifetime_filter');
+	function custom_haku_serp_cache_lifetime_filter($value) {
+		return MINUTE_IN_SECONDS * 10;
+	}
+
 	// Change the Haku plugin SERP show thumbnail to false.
 	add_filter('haku_serp_show_thumbnail_filter', '__return_false');
 
@@ -73,6 +79,11 @@ Or if you're using a custom site plugin (you should be), do it via the `plugins_
 		add_filter('haku_serp_excerpt_word_count_filter', 'custom_haku_serp_excerpt_word_count_filter');
 		function custom_haku_serp_excerpt_word_count_filter($value) {
 			return 80;
+		}
+		// ---- Change the Haku plugin SERP cache lifetime to 10 minutes.
+		add_filter('haku_serp_cache_lifetime_filter', 'custom_haku_serp_cache_lifetime_filter');
+		function custom_haku_serp_cache_lifetime_filter($value) {
+			return MINUTE_IN_SECONDS * 10;
 		}
 		// Change the Haku plugin SERP show thumbnail to false.
 		add_filter('haku_serp_show_thumbnail_filter', '__return_false');
