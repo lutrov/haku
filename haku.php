@@ -6,7 +6,7 @@ Description: Improves the default Wordpress search by treating the search string
 Plugin URI: https://github.com/lutrov/haku
 Author: Ivan Lutrov
 Author URI: http://lutrov.com/
-Version: 3.4
+Version: 4.0
 Notes: This plugin provides an API to customise the default constant values. See the "readme.md" file for more.
 */
 
@@ -167,8 +167,8 @@ function haku_post_types() {
 //
 // Setup body class.
 //
-add_filter('body_class', 'haku_body_class');
-function haku_body_class($classes) {
+add_filter('body_class', 'haku_body_class_filter');
+function haku_body_class_filter($classes) {
 	global $post;
 	$slug = apply_filters('haku_serp_slug_filter', HAKU_SERP_SLUG);
 	if ($post->post_name == $slug) {
@@ -180,16 +180,36 @@ function haku_body_class($classes) {
 //
 // Hook into the WP search.
 //
-add_action('plugins_loaded', 'haku_add_filter');
-function haku_add_filter() {
+add_action('plugins_loaded', 'haku_add_filter_action');
+function haku_add_filter_action() {
 	add_filter('get_search_form', 'haku_search_form', 11);
 }
 
 //
 // Add shortcode to use in results page.
 //
-if (strlen(get_option('permalink_structure')) > 0) {
-	add_shortcode('haku', 'haku_search_results');
+add_action('plugins_loaded', 'haku_add_shortcode_action');
+function haku_add_shortcode_action() {
+	if (strlen(get_option('permalink_structure')) > 0) {
+		add_shortcode('haku', 'haku_search_results');
+	}
+}
+
+//
+// Custom admin notices.
+//
+add_action('admin_notices', 'haku_admin_notices_action');
+function haku_admin_notices_action() {
+	$slug = apply_filters('haku_serp_slug_filter', HAKU_SERP_SLUG);
+	$page = get_page_by_path($slug);
+	if (empty($page) == false) {
+		if (substr_count($page->post_content, '[haku]') == 0) {
+			$page = null;
+		}
+	}
+	if (empty($page) == true) {
+		echo sprintf('<div class="notice notice-warning is-dismissible"><p>%s</p></div>', sprintf(__('Haku only works with a search results page. Please create a page called "%s" and add %s as the shortcode.'), ucfirst($slug), '<code>[haku]</code>'));
+	}
 }
 
 ?>
