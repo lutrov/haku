@@ -18,7 +18,7 @@ defined('ABSPATH') || die('Ahem.');
 define('HAKU_SERP_EXCERPT_WORD_COUNT', 40);
 define('HAKU_SERP_SHOW_AUTHOR', true);
 define('HAKU_SERP_SHOW_DATE', true);
-define('HAKU_SERP_CACHE_LIFETIME', 60);
+define('HAKU_SERP_CACHE_LIFETIME', 10);
 define('HAKU_SERP_DATE_FORMAT', get_option('date_format'));
 define('HAKU_SERP_SHOW_THUMBNAIL', true);
 define('HAKU_SERP_SLUG', 'search');
@@ -93,10 +93,10 @@ function haku_search_results() {
 		}
 		$limit = (int) apply_filters('haku_serp_results_limit_filter', HAKU_SERP_RESULTS_LIMIT);
 		$in = haku_post_types();
-		$query = "SELECT $wpdb->posts.ID, $wpdb->posts.post_name, $wpdb->posts.post_title, $wpdb->posts.post_date, $wpdb->posts.post_author, $wpdb->posts.post_excerpt, $wpdb->posts.post_content, IF(LOCATE('$q', $wpdb->posts.post_title), 1, 0) AS IN_TITLE, IF(LOCATE('$q', $wpdb->posts.post_content), 1, 0) AS IN_CONTENT, LOCATE('$q', $wpdb->posts.post_title) AS TITLE_POS, LOCATE('$q', $wpdb->posts.post_content) AS CONTENT_POS, (LENGTH($wpdb->posts.post_title) - LENGTH(REPLACE(UPPER($wpdb->posts.post_title), '$q', ''))) / LENGTH('$q') AS TITLE_CNT, (LENGTH($wpdb->posts.post_content) - LENGTH(REPLACE(UPPER($wpdb->posts.post_content), '$q', ''))) / LENGTH('%q') AS CONTENT_CNT FROM $wpdb->posts WHERE 1=1 AND ((($wpdb->posts.post_title LIKE '%$q%') OR ($wpdb->posts.post_content LIKE '%$q%'))) AND $wpdb->posts.post_type IN ($in) AND ($wpdb->posts.post_status = 'publish' OR $wpdb->posts.post_author = 1 AND $wpdb->posts.post_status = 'private') ORDER BY IN_TITLE DESC, TITLE_CNT DESC, TITLE_POS ASC, IN_CONTENT DESC, CONTENT_CNT DESC, CONTENT_POS ASC, $wpdb->posts.post_date DESC LIMIT $limit";
+		$query = "SELECT $wpdb->posts.ID, $wpdb->posts.post_name, $wpdb->posts.post_title, $wpdb->posts.post_date, $wpdb->posts.post_author, $wpdb->posts.post_excerpt, $wpdb->posts.post_content, $wpdb->posts.post_type, IF(LOCATE('$q', $wpdb->posts.post_title), 1, 0) AS IN_TITLE, IF(LOCATE('$q', $wpdb->posts.post_content), 1, 0) AS IN_CONTENT, LOCATE('$q', $wpdb->posts.post_title) AS TITLE_POS, LOCATE('$q', $wpdb->posts.post_content) AS CONTENT_POS, (LENGTH($wpdb->posts.post_title) - LENGTH(REPLACE(UPPER($wpdb->posts.post_title), '$q', ''))) / LENGTH('$q') AS TITLE_CNT, (LENGTH($wpdb->posts.post_content) - LENGTH(REPLACE(UPPER($wpdb->posts.post_content), '$q', ''))) / LENGTH('%q') AS CONTENT_CNT FROM $wpdb->posts WHERE 1=1 AND ((($wpdb->posts.post_title LIKE '%$q%') OR ($wpdb->posts.post_content LIKE '%$q%'))) AND $wpdb->posts.post_type IN ($in) AND ($wpdb->posts.post_status = 'publish' OR $wpdb->posts.post_author = 1 AND $wpdb->posts.post_status = 'private') ORDER BY IN_TITLE DESC, TITLE_CNT DESC, TITLE_POS ASC, IN_CONTENT DESC, CONTENT_CNT DESC, CONTENT_POS ASC, $wpdb->posts.post_date DESC LIMIT $limit";
 		$result = get_transient(sprintf('haku_%s', hash('md5', $query)));
 		if ($result == false) {
-			$posts = $wpdb->get_results($query, OBJECT);
+			$posts = apply_filters('haku_results_filter', $wpdb->get_results($query, OBJECT));
 			if (($c = count($posts)) > 0) {
 				switch ($c) {
 					case $limit:
@@ -160,7 +160,7 @@ function haku_search_results() {
 // Get post types to include.
 //
 function haku_post_types() {
-	$result = sprintf("'%s'", implode("', '", apply_filters('haku_post_types_filter', array('page', 'post', 'product'))));
+	$result = sprintf("'%s'", implode("', '", apply_filters('haku_post_types_filter', array('page', 'post'))));
 	return $result;
 }
 
