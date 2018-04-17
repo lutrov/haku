@@ -24,6 +24,12 @@ This plugin provides an API to customise the default constant values. See this e
 		return 'search-results';
 	}
 
+	// ---- Change the Haku plugin SERP results.
+	add_filter('haku_results_filter', 'custom_haku_results_filter');
+	function custom_haku_results_filter($posts) {
+		return $posts;
+	}
+
 	// ---- Change the Haku plugin SERP results limit.
 	add_filter('haku_serp_results_limit_filter', 'custom_haku_serp_results_limit_filter');
 	function haku_serp_results_limit_filter($value) {
@@ -69,6 +75,11 @@ Or if you're using a custom site plugin (you should be), do it via the `plugins_
 		add_filter('haku_serp_slug_filter', 'custom_haku_serp_slug_filter');
 		function custom_haku_serp_slug_filter($value) {
 			return 'search-results';
+		}
+		// ---- Change the Haku plugin SERP results.
+		add_filter('haku_results_filter', 'custom_haku_results_filter');
+		function custom_haku_results_filter($posts) {
+			return $posts;
 		}
 		// ---- Change the Haku plugin SERP results limit.
 		add_filter('haku_serp_results_limit_filter', 'custom_haku_serp_results_limit_filter');
