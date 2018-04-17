@@ -27,7 +27,13 @@ This plugin provides an API to customise the default constant values. See this e
 	// ---- Change the Haku plugin SERP results.
 	add_filter('haku_results_filter', 'custom_haku_results_filter');
 	function custom_haku_results_filter($posts) {
-		return $posts;
+		$result = array();
+		for ($i = 0, $c = count($posts); $i < $c; $i++) {
+			if ($posts[$i]->post_author == 1) {
+				array_push($result, $posts[$i]);
+			}
+		}
+		return $result;
 	}
 
 	// ---- Change the Haku plugin SERP results limit.
@@ -60,9 +66,7 @@ This plugin provides an API to customise the default constant values. See this e
 	// ---- Change the Haku plugin custom post types to include in the search.
 	add_filter('haku_post_types_filter', 'custom_haku_post_types_filter');
 	function custom_haku_post_types_filter($types) {
-		foreach (array('movie', 'book') as $type) {
-			array_push($types, $type);
-		}
+		$types = array_push($types, 'movie', 'book');
 		return $types;
 	}
 
@@ -79,7 +83,13 @@ Or if you're using a custom site plugin (you should be), do it via the `plugins_
 		// ---- Change the Haku plugin SERP results.
 		add_filter('haku_results_filter', 'custom_haku_results_filter');
 		function custom_haku_results_filter($posts) {
-			return $posts;
+			$result = array();
+			for ($i = 0, $c = count($posts); $i < $c; $i++) {
+				if ($posts[$i]->post_author == 1) {
+					array_push($result, $posts[$i]);
+				}
+			}
+			return $result;
 		}
 		// ---- Change the Haku plugin SERP results limit.
 		add_filter('haku_serp_results_limit_filter', 'custom_haku_serp_results_limit_filter');
@@ -105,9 +115,7 @@ Or if you're using a custom site plugin (you should be), do it via the `plugins_
 		// Change the Haku plugin custom post types to include in the search.
 		add_filter('haku_post_types_filter', 'custom_haku_post_types_filter');
 		function custom_haku_post_types_filter($types) {
-			foreach (array('movie', 'book') as $type) {
-				array_push($types, $type);
-			}
+			$types = array_push($types, 'movie', 'book');
 			return $types;
 		}
 	}
