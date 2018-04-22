@@ -6,7 +6,7 @@ Description: Improves the default Wordpress search by treating the search string
 Plugin URI: https://github.com/lutrov/haku
 Author: Ivan Lutrov
 Author URI: http://lutrov.com/
-Version: 4.0
+Version: 4.1
 Notes: This plugin provides an API to customise the default constant values. See the "readme.md" file for more.
 */
 
@@ -100,13 +100,13 @@ function haku_search_results() {
 			if (($c = count($posts)) > 0) {
 				switch ($c) {
 					case $limit:
-						$result = sprintf('%s<p class="message">Your search for "%s" produced the top %s results, sorted by relevance.</p>', $result, $q, $c);
+						$result = sprintf('%s<p class="message">%s</p>', $result, sprintf(__('Your search for "%s" produced the top %s results, sorted by relevance.'), $q, $c));
 						break;
 					case 1:
-						$result = sprintf('%s<p class="message">Your search for "%s" produced 1 result.</p>', $result, $q);
+						$result = sprintf('%s<p class="message">%s</p>', $result, sprintf(__('Your search for "%s" produced 1 result.'), $q));
 						break;
 					default:
-						$result = sprintf('%s<p class="message">Your search for "%s" produced %s results, sorted by relevance.</p>', $result, $q, $c);
+						$result = sprintf('%s<p class="message">%s</p>', $result, sprintf(__('Your search for "%s" produced %s results, sorted by relevance.'), $q, $c));
 						break;
 				}
 				foreach ($posts as $post) {
@@ -149,7 +149,7 @@ function haku_search_results() {
 					set_transient(sprintf('haku_%s', hash('md5', $query)), $result, apply_filters('haku_serp_cache_lifetime_filter', HAKU_SERP_CACHE_LIFETIME));
 				}
 			} else {
-				$result = sprintf('%s<p class="message message-no-results">Your search for "%s" produced no results.</p>', $result, $q);
+				$result = sprintf('%s<p class="message message-no-results">%s</p>', $result, sprintf(__('Your search for "%s" produced no results.')), $q);
 			}
 		}
 	}
