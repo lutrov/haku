@@ -6,7 +6,7 @@ Description: Improves the default Wordpress search by treating the search string
 Plugin URI: https://github.com/lutrov/haku
 Author: Ivan Lutrov
 Author URI: http://lutrov.com/
-Version: 4.1
+Version: 4.2
 Notes: This plugin provides an API to customise the default constant values. See the "readme.md" file for more.
 */
 
@@ -136,7 +136,7 @@ function haku_search_results() {
 					if (function_exists('markdown')) {
 						$content = markdown($content);
 					}
-					$content = wp_trim_words(strip_shortcodes($content), apply_filters('haku_serp_excerpt_word_count_filter', HAKU_SERP_EXCERPT_WORD_COUNT));
+					$content = wp_trim_words(do_shortcode($content), apply_filters('haku_serp_excerpt_word_count_filter', HAKU_SERP_EXCERPT_WORD_COUNT));
 					switch (true) {
 						case ($x = strrpos($content, '.')):
 						case ($x = strrpos($content, ':')):
