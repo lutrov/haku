@@ -133,7 +133,6 @@ Style the search results page & form using the following CSS declarations in you
 	.haku-serp .message-no-results {}
 	.haku-serp .entry {}
 	.haku-serp .entry .entry-title {}
-	.haku-serp .entry .entry-permalink {}
 	.haku-serp .entry .entry-image {}
 	.haku-serp .entry .entry-meta {}
 	.haku-serp .entry .entry-meta .entry-author {}
