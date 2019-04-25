@@ -111,7 +111,7 @@ function haku_search_results() {
 				}
 				foreach ($posts as $post) {
 					$permalink = get_permalink($post->ID);
-					$result = sprintf('%s<div class="entry"><h2 class="entry-title"><a href="%s" rel="bookmark">%s</a></h2><div class="entry-permalink"><a href="%s">%s</a></div>', $result, $permalink, $post->post_title, $permalink, $permalink);
+					$result = sprintf('%s<div class="entry"><h2 class="entry-title"><a href="%s" rel="bookmark">%s</a></h2><div class="entry-permalink">%s</div>', $result, $permalink, $post->post_title, $permalink);
 					$thumbnail = null;
 					if (apply_filters('haku_serp_show_thumbnail_filter', HAKU_SERP_SHOW_THUMBNAIL)) {
 						$thumbnail = get_the_post_thumbnail($post->ID, 'thumbnail');
@@ -149,7 +149,7 @@ function haku_search_results() {
 					set_transient(sprintf('haku_%s', hash('md5', $query)), $result, apply_filters('haku_serp_cache_lifetime_filter', HAKU_SERP_CACHE_LIFETIME));
 				}
 			} else {
-				$result = sprintf('%s<p class="message message-no-results">%s</p>', $result, sprintf(__('Your search for "%s" produced no results.'), $q));
+				$result = sprintf('%s<p class="message message-no-results">%s</p>', $result, sprintf(__('Your search for "%s" produced no results.')), $q);
 			}
 		}
 	}
