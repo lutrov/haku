@@ -149,7 +149,7 @@ function haku_search_results() {
 					set_transient(sprintf('haku_%s', hash('md5', $query)), $result, apply_filters('haku_serp_cache_lifetime_filter', HAKU_SERP_CACHE_LIFETIME));
 				}
 			} else {
-				$result = sprintf('%s<p class="message message-no-results">%s</p>', $result, sprintf(__('Your search for "%s" produced no results.')), $q);
+				$result = sprintf('%s<p class="message message-no-results">%s</p>', $result, sprintf(__('Your search for "%s" produced no results.'), $q));
 			}
 		}
 	}
