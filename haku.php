@@ -27,7 +27,7 @@ define('HAKU_SERP_RESULTS_LIMIT', 100);
 //
 // Don't touch these unless you want the sky to fall.
 //
-define('HAKU_BASE_PLUGIN_PATH', dirname(__FILE__));
+define('HAKU_PLUGIN_PATH', dirname(__FILE__));
 
 //
 // Get the entered search query.
