@@ -6,7 +6,7 @@ Description: Improves the default Wordpress search by treating the search string
 Plugin URI: https://github.com/lutrov/haku
 Author: Ivan Lutrov
 Author URI: http://lutrov.com/
-Version: 4.2
+Version: 4.3
 Notes: This plugin provides an API to customise the default constant values. See the "readme.md" file for more.
 */
 
@@ -35,7 +35,8 @@ define('HAKU_PLUGIN_PATH', dirname(__FILE__));
 function haku_search_query() {
 	$result = null;
 	if (isset($_POST['q'])) {
-		$result = trim(preg_replace('#[\s]+#', ' ', str_replace('"', null, $_POST['q'])));
+		$result = trim(preg_replace('#[\s]+#', ' ', str_replace('"', null, wp_unslash($_POST['q']))));
+
 	}
 	return $result;
 }
