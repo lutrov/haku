@@ -6,7 +6,7 @@ Description: Improves the default Wordpress search by treating the search string
 Plugin URI: https://github.com/lutrov/haku
 Author: Ivan Lutrov
 Author URI: http://lutrov.com/
-Version: 4.3
+Version: 4.4
 Notes: This plugin provides an API to customise the default constant values. See the "readme.md" file for more.
 */
 
@@ -16,9 +16,9 @@ defined('ABSPATH') || die('Ahem.');
 // Define constants used by this plugin.
 //
 define('HAKU_SERP_EXCERPT_WORD_COUNT', 40);
-define('HAKU_SERP_SHOW_AUTHOR', true);
-define('HAKU_SERP_SHOW_DATE', true);
-define('HAKU_SERP_CACHE_LIFETIME', 10);
+define('HAKU_SERP_SHOW_AUTHOR', false);
+define('HAKU_SERP_SHOW_DATE', false);
+define('HAKU_SERP_CACHE_LIFETIME', 1);
 define('HAKU_SERP_DATE_FORMAT', get_option('date_format'));
 define('HAKU_SERP_SHOW_THUMBNAIL', true);
 define('HAKU_SERP_SLUG', 'search');
@@ -112,30 +112,28 @@ function haku_search_results() {
 				}
 				foreach ($posts as $post) {
 					$permalink = get_permalink($post->ID);
-					$result = sprintf('%s<div class="entry"><h2 class="entry-title"><a href="%s" rel="bookmark">%s</a></h2><div class="entry-permalink">%s</div>', $result, $permalink, $post->post_title, $permalink);
+					$result = sprintf('%s<div class="item"><h2 class="item-title"><a href="%s" rel="bookmark">%s</a></h2><p class="item-permalink">%s</p>', $result, $permalink, esc_attr($post->post_title), $permalink);
+					$meta = null;
+					if (apply_filters('haku_serp_show_date_filter', HAKU_SERP_SHOW_DATE)) {
+						$meta = sprintf('%s<span class="item-date">%s</span>', $meta, date(HAKU_SERP_DATE_FORMAT, strtotime($post->post_date)));
+					}
+					if (apply_filters('haku_serp_show_author_filter', HAKU_SERP_SHOW_AUTHOR)) {
+						$meta = sprintf('%s by <span class="item-author">%s %s</span>', $meta, get_the_author_meta('first_name', $post->post_author), get_the_author_meta('last_name', $post->post_author));
+					}
+					if (empty($meta) == false) {
+						$result = sprintf('%s<p class="item-meta">%s</p>', $result, $meta);
+					}
 					$thumbnail = null;
 					if (apply_filters('haku_serp_show_thumbnail_filter', HAKU_SERP_SHOW_THUMBNAIL)) {
 						$thumbnail = get_the_post_thumbnail($post->ID, 'thumbnail');
 					}
-					if (strlen($thumbnail) > 0) {
-						$result = sprintf('%s<div class="entry-image">%s</div>', $result, $thumbnail);
-					}
-					$meta = null;
-					if (apply_filters('haku_serp_show_date_filter', HAKU_SERP_SHOW_DATE)) {
-						$meta = sprintf('%s<span class="entry-date">%s</span>', $meta, date(HAKU_SERP_DATE_FORMAT, strtotime($post->post_date)));
-					}
-					if (apply_filters('haku_serp_show_author_filter', HAKU_SERP_SHOW_AUTHOR)) {
-						$meta = sprintf('%s by <span class="entry-author">%s %s</span>', $meta, get_the_author_meta('first_name', $post->post_author), get_the_author_meta('last_name', $post->post_author));
-					}
-					if (strlen($meta) > 0) {
-						$result = sprintf('%s<div class="entry-meta">%s</div>', $result, $meta);
+					$result = sprintf('%s<div class="item-content with%s-image">', $result, empty($thumbnail) == false ? null : 'out');
+					if (empty($thumbnail) == false) {
+						$result = sprintf('%s<p class="item-image">%s</p>', $result, $thumbnail);
 					}
 					$content = $post->post_excerpt;
-					if (strlen($content) == 0) {
+					if (empty($content) == true) {
 						$content = $post->post_content;
-					}
-					if (function_exists('markdown')) {
-						$content = markdown($content);
 					}
 					$content = wp_trim_words(do_shortcode($content), apply_filters('haku_serp_excerpt_word_count_filter', HAKU_SERP_EXCERPT_WORD_COUNT));
 					switch (true) {
@@ -146,7 +144,7 @@ function haku_search_results() {
 							$content = substr($content, 0, $x + 1);
 							break;
 					}
-					$result = sprintf('%s<div class="entry-excerpt">%s</div></div>', $result, $content);
+					$result = sprintf('%s<p class="item-excerpt">%s</p></div></div>', $result, $content);
 					set_transient(sprintf('haku_%s', hash('md5', $query)), $result, apply_filters('haku_serp_cache_lifetime_filter', HAKU_SERP_CACHE_LIFETIME));
 				}
 			} else {
@@ -191,7 +189,7 @@ function haku_add_filter_action() {
 //
 add_action('plugins_loaded', 'haku_add_shortcode_action');
 function haku_add_shortcode_action() {
-	if (strlen(get_option('permalink_structure')) > 0) {
+	if (empty(get_option('permalink_structure')) == false) {
 		add_shortcode('haku', 'haku_search_results');
 	}
 }
