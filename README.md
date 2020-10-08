@@ -131,11 +131,12 @@ Style the search results page & form using the following CSS declarations in you
 	.haku-serp {}
 	.haku-serp .message {}
 	.haku-serp .message-no-results {}
-	.haku-serp .entry {}
-	.haku-serp .entry .entry-title {}
-	.haku-serp .entry .entry-permalink {}
-	.haku-serp .entry .entry-image {}
-	.haku-serp .entry .entry-meta {}
-	.haku-serp .entry .entry-meta .entry-author {}
-	.haku-serp .entry .entry-meta .entry-date {}
-	.haku-serp .entry .entry-excerpt {}
+	.haku-serp .item {}
+	.haku-serp .item .item-title {}
+	.haku-serp .item .item-permalink {}
+	.haku-serp .item .item-meta {}
+	.haku-serp .item .item-meta .item-author {}
+	.haku-serp .item .item-meta .item-date {}
+	.haku-serp .item .item-content {}
+	.haku-serp .item .item-content .item-image {}
+	.haku-serp .item .item-content .item-excerpt {}
