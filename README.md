@@ -1,5 +1,7 @@
 # Haku
 
+__Note: This plugin is probably not compatible with Wordpress 5.__
+
 Haku improves the default Wordpress search by treating the search string as a phrase, not as individual words. It takes relevancy into account, which means it places more importance on post types that contain the phrase in the title, which contain the phrase multiple times, and the relative position of the phrase. Why this plugin name? Haku means "search" in Finnish.
 
 ## Copyright and License
